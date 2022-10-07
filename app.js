@@ -7,11 +7,12 @@ app.use(express.json());
 app.use(authenticateJWT)
 
 const authRoutes = require('./routes/auth')
-
+const washroomRoutes = require('./routes/washroom')
 
 
 
 app.use("/auth", authRoutes)
+app.use("/washroom", washroomRoutes)
 
 
 app.use(function(req, res, next) {
