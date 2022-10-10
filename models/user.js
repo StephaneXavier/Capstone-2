@@ -55,10 +55,9 @@ class User {
     }
 
     static async getUserPosts(username){
-        const posts = await db.query(`SELECT submitted_washrooms.id, x_y_coordinates,opens_at, closes_at, cleanliness.rating
+        const posts = await db.query(`SELECT id, x_coordinate, y_coordinate, opens_at, closes_at
                                        FROM submitted_washrooms
-                                       JOIN cleanliness ON (submitted_washrooms.id = cleanliness.post_id)
-                                       WHERE submitted_washrooms.id = $1`, [username])
+                                       WHERE submitted_washrooms.user_id = $1`, [username])
         if(posts.rows.length ===0){
             throw new ExpressError('no posts for user', 400)
         }
@@ -66,6 +65,7 @@ class User {
     }
 
     static async get(username) {
+        
         const user = await db.query(`SELECT username, join_at, last_login_at
                                 FROM users
                                 WHERE username=$1`, [username]);
@@ -73,6 +73,13 @@ class User {
         if (user.rows.length === 0) {
             throw new ExpressError('username does not exit', 404)
         };
+        return user.rows[0]
+    }
+
+    static async remove (username){
+
+        const user = await db.query(`DELETE FROM users WHERE username = $1 return username `, [username])
+
         return user.rows[0]
     }
 

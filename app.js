@@ -8,11 +8,13 @@ app.use(authenticateJWT)
 
 const authRoutes = require('./routes/auth')
 const washroomRoutes = require('./routes/washroom')
-
-
+const userRoutes = require('./routes/user')
+const voteRoutes = require('./routes/vote')
 
 app.use("/auth", authRoutes)
 app.use("/washroom", washroomRoutes)
+app.use("/user", userRoutes)
+app.use("/vote", voteRoutes)
 
 
 app.use(function(req, res, next) {
