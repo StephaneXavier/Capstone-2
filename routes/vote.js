@@ -9,13 +9,14 @@ const { json } = require('express');
 router.get('/:washroomId', async (req, res, next) => {
 
     try{
-        const {wahsroomId} = req.params;
+        debugger
+        const {washroomId} = req.params;
 
-        const result = await Vote.getVote({wahsroomId, username:req.user.username})
+        const result = await Vote.getVote({washroomId, username:req.user.username})
 
-        if(result.rows.length === 0) throw new ExpressError('No votes yet')
+        if(result.length === 0) throw new ExpressError('No votes yet')
 
-        if(result.rows[0].upvote ===1) return res.json({vote: 'upvote'})
+        if(result[0].upvote ===1) return res.json({vote: 'upvote'})
         else return res.json({vote:'downvote'})
 
     }catch(e){
@@ -23,18 +24,31 @@ router.get('/:washroomId', async (req, res, next) => {
     }
 })
 
-router.post('/:vote/:washroomId', ensureLoggedIn, async (req, res, next) => {
+router.post('/:voteType/:washroomId', ensureLoggedIn, async (req, res, next) => {
     try{
-        const {washroomId, vote} = req.params;
+        const {washroomId, voteType} = req.params;
+        const {username} = req.user
         
-        if(vote === 'upvote'){
-          await Vote.upvote({washroomId, username: req.user.username})
-          return res.json({message: 'upvoted'})
-        }else if(vote === 'downvote'){
-            await Vote.upvote({washroomId, username:req.user.username})
-        }
+        const result = await Vote.submittVote({username, washroomId, voteType})
+        
+        return res.json({message:`post_id ${washroomId} has been ${voteType}d by ${username}`})
 
+    }catch(e){
+        return next(e)
+    }
+})
 
+router.delete('/:washroomId', async (req, res, next) => {
+    try{
+        const {washroomId} = req.params;
+        const {username} = req.user
+        const voteInfo = await Vote.getVote({washroomId, username})
+        
+        if(voteInfo.length === 0) throw new ExpressError('no vote for post/username combo') 
+
+        await Vote.removeVote({washroomId, username})
+
+        return res.json({message:`vote deleted`})
     }catch(e){
         return next(e)
     }
