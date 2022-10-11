@@ -24,7 +24,7 @@ class Washroom {
                                         VALUES ($1,$2,$3,$4,$5,$6)
                                         RETURNING id`,
             [washroomType, username, xCoordinate, yCoordinate, opensAt, closesAt])
-        debugger
+        
         await db.query(`INSERT INTO votes (user_id, post_id, upvote)
                         VALUES ($1,$2,1)`, [username, result.rows[0].id])
         return result.rows[0]

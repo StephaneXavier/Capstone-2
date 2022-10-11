@@ -3,11 +3,13 @@ const { SECRET_KEY } = require("../config");
 
 /** Middleware: Authenticate user. */
 function authenticateJWT(req, res, next) {
+    
     try {
         
         const tokenFromBody = req.body._token;
         const payload = jwt.verify(tokenFromBody, SECRET_KEY);
         req.user = payload;
+        
         return next();
     } catch (err) {
         return next();
@@ -29,7 +31,7 @@ function ensureLoggedIn(req, res, next) {
 // if we have a req.user (authenticatJWT added the user), then we check to see
 // if the req.user is the same as what is being passed in the req.params
 function ensureCorrectUser(req, res, next) {
-        debugger
+        
         
         if(req.user.username !== req.body.username){
             throw ExpressError('Can only add washroom to user account if you are the user')
@@ -38,7 +40,7 @@ function ensureCorrectUser(req, res, next) {
         }
             
 }
-// end
+
 
 module.exports = {
     authenticateJWT,

@@ -38,7 +38,7 @@ router.post('/login', async (req, res, next) => {
  * {username, password} => {token}.
  */
 router.post('/register', async (req, res, next) => {
-
+    
     try {
         const newUser = await User.register(req.body);
         User.updateLoginTimestamp(newUser.username);
