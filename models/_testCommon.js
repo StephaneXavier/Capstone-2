@@ -55,5 +55,6 @@ async function commonBeforeEach() {
     commonAfterAll,
     commonAfterEach,
     commonBeforeAll,
-    commonBeforeEach
+    commonBeforeEach,
+    testWashroomIds
   }
