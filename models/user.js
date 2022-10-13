@@ -32,7 +32,7 @@ class User {
     /** Authenticate: is this username/password valid? Returns boolean. */
 
     static async authenticate(username, password) {
-
+        
         const result = await db.query(`SELECT * FROM users
                                 WHERE username=$1`, [username]);
 
@@ -55,7 +55,7 @@ class User {
     }
 
     static async getUserPosts(username){
-        const posts = await db.query(`SELECT id, x_coordinate, y_coordinate, opens_at, closes_at
+        const posts = await db.query(`SELECT id, x_coordinate, y_coordinate, opens_at, closes_at, washroom_type
                                        FROM submitted_washrooms
                                        WHERE submitted_washrooms.user_id = $1`, [username])
         if(posts.rows.length ===0){

@@ -28,21 +28,3 @@ CREATE TABLE votes (
     post_id integer NOT NULL REFERENCES submitted_washrooms ON DELETE CASCADE,
     upvote integer NOT NULL    
 );
-
-
-INSERT INTO users (username, password, join_at)
-VALUES ('kanzo', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', '2011-01-01'),
-        ('steph', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', '2011-02-02'),
-        ('tezy', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', '2011-03-03');
-
-INSERT INTO submitted_washrooms (washroom_type, user_id, x_coordinate,y_coordinate, opens_at, closes_at)
-VALUES ('porta-potty', 'kanzo',45.01, 55.12, '1200','1500'),
-        ('gas-station', 'tezy',46.03,-54.14, '0600','2100'),
-        ('porta-potty', 'steph',45.06, -45.15, '','');
-
-INSERT INTO votes (user_id,post_id,upvote)
-VALUES ('kanzo',1,1),
-        ('kanzo',2,0),
-        ('steph',3,1),
-        ('steph',1,1);
-
