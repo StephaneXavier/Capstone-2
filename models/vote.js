@@ -2,6 +2,10 @@ const ExpressError = require('../helpers/expressErrors')
 const db = require('../db')
 
 class Vote {
+    // constructor(){
+    //     this.submittVote = this.submittVote.bind(this)
+    //     this.getVote = this.getVote.bind(this)
+    // }
 
     static async getVote({ washroomId, username }) {
         
@@ -13,15 +17,15 @@ class Vote {
 
     static async submittVote({ washroomId, username, voteType }) {
         
-        const isThereVoteAlready = await this.getVote({ washroomId, username });
+        const isThereVoteAlready = await Vote.getVote({ washroomId, username });
         const voteTypeNum = voteType === 'upvote' ? 1 : 0;
         if (isThereVoteAlready) {
             if (isThereVoteAlready.upvote === voteTypeNum) throw new ExpressError(`can't ${voteType} twice`)
-            const res = await this.updateVote({washroomId, currentVote : isThereVoteAlready.upvote, username})
+            const res = await Vote.updateVote({washroomId, currentVote : isThereVoteAlready.upvote, username})
             return res.rows
         }
-        if(voteType === 'upvote') return await this.upvote({washroomId, username})
-        if(voteType === 'downvote') return await this.downvote({washroomId, username})
+        if(voteType === 'upvote') return await Vote.upvote({washroomId, username})
+        if(voteType === 'downvote') return await Vote.downvote({washroomId, username})
     }
 
 
@@ -55,7 +59,9 @@ class Vote {
 
     static async removeVote({ washroomId, username }) {
 
-        const result = await db.query(`DELETE FROM votes WHERE post_id = $1 AND user_id= $2 `, [washroomId, username])
+        const result = await db.query(`DELETE FROM votes WHERE post_id = $1 AND user_id= $2 RETURNING id`, [washroomId, username])
+
+        
 
     }
 
