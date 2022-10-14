@@ -2,11 +2,8 @@ const ExpressError = require('../helpers/expressErrors')
 const db = require('../db')
 
 class Vote {
-    // constructor(){
-    //     this.submittVote = this.submittVote.bind(this)
-    //     this.getVote = this.getVote.bind(this)
-    // }
-
+      
+    // get the specific vote on a washroom from a user (either upvote or downvote)
     static async getVote({ washroomId, username }) {
         
         const result = await db.query(`SELECT * FROM votes WHERE post_id = $1 AND user_id = $2`, [washroomId, username])
@@ -14,8 +11,11 @@ class Vote {
         return result.rows[0]
     }
 
-
-    static async submittVote({ washroomId, username, voteType }) {
+    // submit a vote to a washroom. Checks to see if vote exists. If it does not it simply adds. If vote exists already
+    /* washroom/user combo then it will switch the votes or throw an error if user tries to upvote/downvote multiple times
+    in a row. voteType here represents what the user is currently trying to submit as a vote.
+    */ 
+    static async submitVote({ washroomId, username, voteType }) {
         
         const isThereVoteAlready = await Vote.getVote({ washroomId, username });
         const voteTypeNum = voteType === 'upvote' ? 1 : 0;
@@ -29,6 +29,8 @@ class Vote {
     }
 
 
+    // switch the vote from up to down or vice versa, depending on what user is submitting and what the user had previously
+    // submitted.
     static async updateVote({ washroomId, currentVote, username }) {
         const newVote = currentVote === 1 ? 0 : 1;
         const res = await db.query(`UPDATE votes SET upvote = $1 WHERE post_id = $2 AND user_id = $3
@@ -56,7 +58,7 @@ class Vote {
     }
 
 
-
+    // remove particular vote.
     static async removeVote({ washroomId, username }) {
 
         const result = await db.query(`DELETE FROM votes WHERE post_id = $1 AND user_id= $2 RETURNING id`, [washroomId, username])

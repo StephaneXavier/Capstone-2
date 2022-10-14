@@ -29,7 +29,7 @@ router.post('/:voteType/:washroomId', ensureLoggedIn, async (req, res, next) => 
         const {washroomId, voteType} = req.params;
         const {username} = req.user
         
-        const result = await Vote.submittVote({username, washroomId, voteType})
+        const result = await Vote.submitVote({username, washroomId, voteType})
         
         return res.json({message:`post_id ${washroomId} has been ${voteType}d by ${username}`})
 

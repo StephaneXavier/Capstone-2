@@ -54,6 +54,7 @@ class User {
 
     }
 
+    // get all of users posts. Returns array of post objects
     static async getUserPosts(username){
         const posts = await db.query(`SELECT id, x_coordinate, y_coordinate, opens_at, closes_at, washroom_type
                                        FROM submitted_washrooms
@@ -64,6 +65,7 @@ class User {
         return posts.rows
     }
 
+    // get information about user
     static async get(username) {
         
         const user = await db.query(`SELECT username, join_at, last_login_at
@@ -76,6 +78,7 @@ class User {
         return user.rows[0]
     }
 
+    // delete user
     static async remove (username){
 
         const user = await db.query(`DELETE FROM users WHERE username = $1 return username `, [username])

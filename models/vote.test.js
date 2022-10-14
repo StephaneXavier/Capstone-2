@@ -1,6 +1,6 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressErrors');
-const { submittVote } = require('./vote');
+const { submitVote } = require('./vote');
 const Vote = require('./vote');
 const {
     commonAfterAll,
@@ -50,10 +50,10 @@ describe('upvote - downvote - updatevote', () => {
     })
 })
 
-describe('SubmittVote', () => {
+describe('SubmitVote', () => {
     test('it adds upvote to post without any current upvote from user', async () => {
 
-        await submittVote({ washroomId: testWashroomIds[0], username: 'u3', voteType: 'upvote' })
+        await submitVote({ washroomId: testWashroomIds[0], username: 'u3', voteType: 'upvote' })
         const vote = await Vote.getVote({ washroomId: testWashroomIds[0], username: 'u3' })
 
         expect(vote.upvote).toBe(1)
@@ -61,7 +61,7 @@ describe('SubmittVote', () => {
         expect(vote.post_id).toBe(testWashroomIds[0])
     })
     test('it adds downvote to post without current downvote from user', async () => {
-        await submittVote({ washroomId: testWashroomIds[1], username: 'u3', voteType: 'downvote' })
+        await submitVote({ washroomId: testWashroomIds[1], username: 'u3', voteType: 'downvote' })
         const vote = await Vote.getVote({ washroomId: testWashroomIds[1], username: 'u3' })
 
         expect(vote.upvote).toBe(0)
@@ -69,7 +69,7 @@ describe('SubmittVote', () => {
         expect(vote.post_id).toBe(testWashroomIds[1])
     })
     test('it turns an upvote into a downvote for a post that user has already voted on', async () => {
-        await submittVote({ washroomId: testWashroomIds[0], username: 'u1', voteType: 'downvote' })
+        await submitVote({ washroomId: testWashroomIds[0], username: 'u1', voteType: 'downvote' })
         const vote = await Vote.getVote({ washroomId: testWashroomIds[0], username: 'u1' })
 
         expect(vote.upvote).toBe(0)
@@ -77,7 +77,7 @@ describe('SubmittVote', () => {
         expect(vote.post_id).toBe(testWashroomIds[0])
     })
     test('it turns an downvote into a upvote for a post that user has already voted on', async () => {
-        await submittVote({ washroomId: testWashroomIds[1], username: 'u1', voteType: 'upvote' })
+        await submitVote({ washroomId: testWashroomIds[1], username: 'u1', voteType: 'upvote' })
         const vote = await Vote.getVote({ washroomId: testWashroomIds[1], username: 'u1' })
 
         expect(vote.upvote).toBe(1)
@@ -86,7 +86,7 @@ describe('SubmittVote', () => {
     })
     test('it throws error if user tries to upvote with when already upvoted', async () => {
         try {
-            await submittVote({ washroomId: testWashroomIds[0], username: 'u1', voteType: 'upvote' })
+            await submitVote({ washroomId: testWashroomIds[0], username: 'u1', voteType: 'upvote' })
         } catch (e) {
             expect(e).toBeInstanceOf(ExpressError)
             expect(e.message).toEqual(`can't upvote twice`)
@@ -94,7 +94,7 @@ describe('SubmittVote', () => {
     })
     test('it throws error if user tries to downvote with when already downvoted', async () => {
         try {
-            await submittVote({ washroomId: testWashroomIds[1], username: 'u1', voteType: 'downvote' })
+            await submitVote({ washroomId: testWashroomIds[1], username: 'u1', voteType: 'downvote' })
         } catch (e) {
             expect(e).toBeInstanceOf(ExpressError)
             expect(e.message).toEqual(`can't downvote twice`)
