@@ -8,7 +8,7 @@ const { SECRET_KEY } = require('../config')
 /** POST /login - login: {username, password} => {token}**/
 router.post('/login', async (req, res, next) => {
     const {username, password} = req.body
-    console.log('trying to log in')
+    
     try {
         if (!username || !password) {
             throw new ExpressError('Please provide username and password', 401)
@@ -22,7 +22,7 @@ router.post('/login', async (req, res, next) => {
             User.updateLoginTimestamp(user.username);
             return res.json({ token })
         } else {
-            throw new ExpressError('Invald username/password combination', 404)
+            throw new ExpressError('Invald username/password combination', 401)
         }
 
     } catch (e) {

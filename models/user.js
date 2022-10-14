@@ -65,7 +65,7 @@ class User {
         return posts.rows
     }
 
-    // get information about user
+    // get information about user {usernam, join_at, last_login_at}
     static async get(username) {
         
         const user = await db.query(`SELECT username, join_at, last_login_at

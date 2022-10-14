@@ -6,6 +6,8 @@ const User = require('../models/user');
 const { SECRET_KEY, DB_URI } = require('../config')
 
 
+
+// returns {username, join_at, last_login_at}
 router.get('/:username', async(req,res,next) => {
     try{
                 
