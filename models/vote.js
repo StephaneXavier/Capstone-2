@@ -7,7 +7,6 @@ class Vote {
     static async getVote({ washroomId, username }) {
         
         const result = await db.query(`SELECT * FROM votes WHERE post_id = $1 AND user_id = $2`, [washroomId, username])
-        
         return result.rows[0]
     }
 

@@ -29,8 +29,9 @@ describe('authenticateJWT', () => {
         };
         
         authenticateJWT(req, res, next);
-        expect(req.user).toEqual(undefined)
+        expect(req.user).toEqual(null)
     })
+    
 })
 
 

@@ -8,26 +8,40 @@ const { SECRET_KEY, DB_URI } = require('../config')
 
 
 // returns {username, join_at, last_login_at}
-router.get('/:username', async(req,res,next) => {
-    try{
-                
-        const {username} = req.params
-        const user = await User.get(username)
-        return res.json({user:user})
+router.get('/:username', async (req, res, next) => {
+    try {
 
-    }catch(e){
+        const { username } = req.params
+        const user = await User.get(username)
+        return res.json({ user: user })
+
+    } catch (e) {
         return next(e)
     }
 
 })
 
-router.get('/submission/:username', async (req,res,next) => {
-    try{
-    const {username} = req.params
-    const washrooms = await User.getUserPosts(username)
+/* get all the posts submitted by a particular user
+{
+washrooms:[
+    {
+        id: expect.any(Number),
+        x_coordinate: '45.01',
+        y_coordinate: '55.12',
+        opens_at: '1200',
+        closes_at: '1500',
+        washroom_type: 'porta-potty'
+    }, etc...
+]
+}
+*/
+router.get('/submission/:username', async (req, res, next) => {
+    try {
+        const { username } = req.params
+        const washrooms = await User.getUserPosts(username)
 
-    return res.json({washrooms:washrooms})
-    }catch(e){
+        return res.json({ washrooms: washrooms })
+    } catch (e) {
         return next(e)
     }
 })

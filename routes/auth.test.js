@@ -53,6 +53,14 @@ describe('Login', () => {
             })
         expect(resp.statusCode).toEqual(401)
     })
+    test('it prevents user that is not logged in from adding to req.user', async() => {
+        const resp = await request(app)
+            .post('/auth/login')
+            .send({
+                username: 'u2',
+                password: 'pwd2'
+            })
+    })
     
 })
 
