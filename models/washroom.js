@@ -18,14 +18,13 @@ class Washroom {
 
     // Submit new washroom to the DB. 
     static async submitNewWahsroom({ washroomInfo, username }) {
-        
         const { washroomType, xCoordinate, yCoordinate, opensAt, closesAt } = washroomInfo;
 
         const result = await db.query(`INSERT INTO submitted_washrooms (washroom_type, user_id,x_coordinate, y_coordinate,opens_at, closes_at)
                                         VALUES ($1,$2,$3,$4,$5,$6)
                                         RETURNING id`,
             [washroomType, username, xCoordinate, yCoordinate, opensAt, closesAt])
-        const test = result.rows[0].id
+        
         
         await db.query(`INSERT INTO votes (user_id, post_id, upvote)
                         VALUES ($1,$2,1)`, [username, result.rows[0].id])

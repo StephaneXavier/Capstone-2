@@ -1,8 +1,9 @@
 const bcrypt = require("bcrypt");
-
+const {} = require('../middleware/auth')
 const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 const testWashroomIds= [];
+
 async function commonBeforeAll(){
     
     await db.query("DELETE FROM submitted_washrooms");
@@ -36,6 +37,8 @@ async function commonBeforeAll(){
         ('u2',${testWashroomIds[2]},1),
         ('u2',${testWashroomIds[0]},1)
     `);
+
+
 }
 
 async function commonBeforeEach() {

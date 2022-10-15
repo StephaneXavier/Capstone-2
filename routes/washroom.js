@@ -20,12 +20,12 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', ensureLoggedIn, async (req, res, next) => {
     try {
-        console.log('in post washroom route')
+        
         const washroomInfo = req.body
         const username = req.user.username
 
         const result = await Washroom.submitNewWahsroom({ username, washroomInfo })
-        return res.json({ message: 'washroom succesfully added' })
+        return res.json({ message: 'washroom succesfully added', washroomId: result })
 
     } catch (e) {
         return next(e)
