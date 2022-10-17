@@ -7,6 +7,7 @@ const { SECRET_KEY } = require('../config');
 const User = require('../models/user');
 
 
+// route to get all washroom in db
 router.get('/', async (req, res, next) => {
     try {
 
@@ -17,7 +18,7 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-
+// post new washroom. washroomInfo must contain {xCoordinate, yCoordinate, washroomType}, option to add opensAt and closesAt
 router.post('/', ensureLoggedIn, async (req, res, next) => {
     try {
         
@@ -33,6 +34,10 @@ router.post('/', ensureLoggedIn, async (req, res, next) => {
 
 })
 
+/* route to get filtered washroom in db. Must contain one of the following params:
+- opensAt, closesAt, minX, maxX, minY, maxY, washroomType.
+If a coordinate is passed, you must pass in all 4 (min & max of X & Y)
+*/ 
 router.get('/search', async (req, res, next) => {
     try {
 
@@ -49,10 +54,11 @@ router.get('/search', async (req, res, next) => {
 
 })
 
+// gets specific washroom based off of ID
 router.get('/search/:washroomId', async (req, res, next) => {
     try {
         const { washroomId } = req.params;
-
+        
         const washroom = await Washroom.getSpecificWashroom(washroomId)
         return res.json({ washroom: washroom })
 
@@ -62,14 +68,15 @@ router.get('/search/:washroomId', async (req, res, next) => {
 
 })
 
+// deletes washroom based off id
 router.delete('/:washroomId', ensureLoggedIn, async (req, res, next) => {
     try {
         
         const { washroomId } = req.params
         const washroomPoster = await Washroom.getSpecificWashroom(washroomId)
-        debugger
-        if(washroomPoster.length === 0) throw new ExpressError('washroom does not exist')
-        if (washroomPoster[0].user_id !== req.user.username) throw new ExpressError('Only poster can delete post')
+        
+      
+        if (washroomPoster.user_id !== req.user.username) throw new ExpressError('Only poster can delete post')
        
 
         await Washroom.deleteWashroom(washroomId);
@@ -81,13 +88,14 @@ router.delete('/:washroomId', ensureLoggedIn, async (req, res, next) => {
     }
 })
 
+// route to patch existing washroom
 router.patch('/:washroomId', ensureLoggedIn, async (req, res, next) => {
     try{
+       
         const { washroomId } = req.params
         const washroomPoster = await Washroom.getSpecificWashroom(washroomId)
-        // debugger
-        if(washroomPoster.length === 0) throw new ExpressError('washroom does not exist')
-        if (washroomPoster[0].user_id !== req.user.username) throw new ExpressError('Only poster can modify post')
+        
+        if (washroomPoster.user_id !== req.user.username) throw new ExpressError('Only poster can modify post')
         
         const result = await Washroom.modifyWashroom({washroomInfo:req.body, washroomId})
         

@@ -48,7 +48,7 @@ class Washroom {
     static async getFilteredWashrooms(searchParams) {
         if(Object.keys(searchParams).length === 0) throw new ExpressError('must provide search params');
 
-        const { type, minX, maxX, minY, maxY, opensAt, closesAt } = searchParams;
+        const { washroomType, minX, maxX, minY, maxY, opensAt, closesAt } = searchParams;
         const whereExpressions = [];
         const queryValues = [];
         let query = `SELECT id, washroom_type, x_coordinate, y_coordinate,opens_at,closes_at
@@ -59,9 +59,9 @@ class Washroom {
         
         if(!allCoordsInParams) throw new ExpressError('Either put min / max for x and y axis, or omit coordinates')
         
-        if(type){
-            queryValues.push(type)
-            whereExpressions.push(`washroom_type LIKE '%${type}%'`)
+        if(washroomType){
+            queryValues.push(washroomType)
+            whereExpressions.push(`washroom_type LIKE '%${washroomType}%'`)
         }
         
         if(opensAt){
@@ -72,11 +72,12 @@ class Washroom {
             queryValues.push(closesAt)
             whereExpressions.push(closesAt)
         }
+        
         if(maxX){
             queryValues.push(minX, maxX, minY, maxY)
             whereExpressions.push(`x_coordinate >= ${minX} AND x_coordinate <= ${maxX} AND y_coordinate >= ${minY} AND y_coordinate <= ${maxY}`)
         }
-
+        
         query += whereExpressions.join("AND");
         const result = await db.query(query);
         
@@ -92,7 +93,7 @@ class Washroom {
                                     WHERE submitted_washrooms.id = ${washroomId}
                                     GROUP BY submitted_washrooms.id`)
 
-        if(result.rows.length ===0) throw new ExpressError('No washroom matching id')
+        if(result.rows.length ===0) throw new ExpressError('No washroom matching id', )
         return result.rows[0]
     }
 

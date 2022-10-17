@@ -115,7 +115,7 @@ describe('getFilteredWashroom', () => {
     })
 
     test('it works with no coordinates', async () => {
-        const searchParams = { type: 'porta-potty' }
+        const searchParams = { washroomType: 'porta-potty' }
         const washrooms = await Washroom.getFilteredWashrooms(searchParams)
 
         expect(washrooms.length).toBe(2)
