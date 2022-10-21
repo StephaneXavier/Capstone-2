@@ -20,12 +20,15 @@ router.get('/', async (req, res, next) => {
 
 // post new washroom. washroomInfo must contain {xCoordinate, yCoordinate, washroomType}, option to add opensAt and closesAt
 router.post('/', ensureLoggedIn, async (req, res, next) => {
+    console.log(' POST/washroom')
     try {
 
         const washroomInfo = req.body.washroomInfo
         const username = req.user.username
+        console.log('POST /washroom - washroomInfo, username', washroomInfo, username)
         
         const result = await Washroom.submitNewWahsroom({ username, washroomInfo })
+        console.log(result.rows)
         return res.json({ message: 'washroom succesfully added', washroomId: result })
 
     } catch (e) {

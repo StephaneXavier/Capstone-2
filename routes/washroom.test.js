@@ -62,8 +62,8 @@ describe('POST /washroom', () => {
             .post('/washroom')
             .send({
                 washroomType: 'test-washroom',
-                xCoordinate: '55',
-                yCoordinate: '66',
+                longitude: '55',
+                latitude: '66',
                 opensAt: '1500',
                 closesAt: '2000',
             })
@@ -84,8 +84,8 @@ describe('POST /washroom', () => {
                 _token: tokenResp.body.token,
                 washroomInfo: {
                     washroomType: 'test-washroom',
-                    xCoordinate: '55',
-                    yCoordinate: '66',
+                    longitude: '55',
+                    latitude: '66',
                     opensAt: '1500',
                     closesAt: '2000',
                 }

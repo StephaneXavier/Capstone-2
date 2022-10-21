@@ -52,8 +52,8 @@ describe('submitNewWashroom', () => {
     test('submits new bathroom', async () => {
         const washroomInfo = {
             washroomType: 'test-type',
-            xCoordinate: 44,
-            yCoordinate: 55,
+            longitude: 44,
+            latitude: 55,
             opensAt: '1200',
             closesAt: '1500'
         }
