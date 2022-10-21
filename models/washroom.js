@@ -6,9 +6,9 @@ const db = require('../db')
 
 class Washroom {
 
-    // Get all washrooms in DB [{id, washroom_type, user_id, x_coordinate, y_coordinate, opens_at, closes_at}...]
+    // Get all washrooms in DB [{id, washroom_type, user_id, longitude, latitude, opens_at, closes_at}...]
     static async getAll() {
-        const washrooms = await db.query(`SELECT id, washroom_type, user_id,x_coordinate, y_coordinate,opens_at,closes_at
+        const washrooms = await db.query(`SELECT id, washroom_type, user_id,longitude, latitude,opens_at,closes_at
                                           FROM submitted_washrooms`)
 
         return washrooms.rows
@@ -20,7 +20,7 @@ class Washroom {
     static async submitNewWahsroom({ washroomInfo, username }) {
         const { washroomType, xCoordinate, yCoordinate, opensAt, closesAt } = washroomInfo;
 
-        const result = await db.query(`INSERT INTO submitted_washrooms (washroom_type, user_id,x_coordinate, y_coordinate,opens_at, closes_at)
+        const result = await db.query(`INSERT INTO submitted_washrooms (washroom_type, user_id,longitude, latitude,opens_at, closes_at)
                                         VALUES ($1,$2,$3,$4,$5,$6)
                                         RETURNING id`,
             [washroomType, username, xCoordinate, yCoordinate, opensAt, closesAt])
@@ -51,7 +51,7 @@ class Washroom {
         const { washroomType, minX, maxX, minY, maxY, opensAt, closesAt } = searchParams;
         const whereExpressions = [];
         const queryValues = [];
-        let query = `SELECT id, washroom_type, x_coordinate, y_coordinate,opens_at,closes_at
+        let query = `SELECT id, washroom_type, longitude, latitude,opens_at,closes_at
                      FROM submitted_washrooms
                      WHERE `
         
@@ -75,7 +75,7 @@ class Washroom {
         
         if(maxX){
             queryValues.push(minX, maxX, minY, maxY)
-            whereExpressions.push(`x_coordinate >= ${minX} AND x_coordinate <= ${maxX} AND y_coordinate >= ${minY} AND y_coordinate <= ${maxY}`)
+            whereExpressions.push(`longitude >= ${minX} AND longitude <= ${maxX} AND latitude >= ${minY} AND latitude <= ${maxY}`)
         }
         
         query += whereExpressions.join("AND");
@@ -84,10 +84,10 @@ class Washroom {
         return result.rows
     }
 
-    /* Using washroomId, return {user_id, washroom_type, x_coordinate, y_coordinate, opens_at, closes_at, votes}*/ 
+    /* Using washroomId, return {user_id, washroom_type, longitude, latitude, opens_at, closes_at, votes}*/ 
     static async getSpecificWashroom(washroomId) {
 
-        const result = await db.query(`SELECT submitted_washrooms.user_id, washroom_type, x_coordinate, y_coordinate, opens_at, closes_at, SUM(votes.upvote) AS total_votes
+        const result = await db.query(`SELECT submitted_washrooms.user_id, washroom_type, longitude, latitude, opens_at, closes_at, SUM(votes.upvote) AS total_votes
                                     FROM submitted_washrooms
                                     JOIN votes ON (post_id = submitted_washrooms.id)
                                     WHERE submitted_washrooms.id = ${washroomId}

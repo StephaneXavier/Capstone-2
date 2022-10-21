@@ -26,8 +26,8 @@ router.get('/:username', async (req, res, next) => {
 washrooms:[
     {
         id: expect.any(Number),
-        x_coordinate: '45.01',
-        y_coordinate: '55.12',
+        longitude: '45.01',
+        latitude: '55.12',
         opens_at: '1200',
         closes_at: '1500',
         washroom_type: 'porta-potty'
@@ -35,7 +35,7 @@ washrooms:[
 ]
 }
 */
-router.get('/submission/:username', async (req, res, next) => {
+router.get('/submission/:username', ensureLoggedIn, async (req, res, next) => {
     try {
         const { username } = req.params
         const washrooms = await User.getUserPosts(username)

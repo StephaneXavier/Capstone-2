@@ -22,7 +22,7 @@ async function commonBeforeAll(){
             ]);
 
     const resultWashrooms = await db.query(`
-    INSERT INTO submitted_washrooms (washroom_type, user_id, x_coordinate,y_coordinate, opens_at, closes_at)
+    INSERT INTO submitted_washrooms (washroom_type, user_id, longitude,latitude, opens_at, closes_at)
     VALUES ('porta-potty', 'u1',45.01, 55.12, '1200','1500'),
         ('gas-station', 'u2',46.03,-54.14, '0600','2100'),
         ('porta-potty', 'u1',45.06, -45.15, '','')

@@ -39,23 +39,31 @@ describe('/user/:username', () => {
 describe('/user/submission/:username', () => {
 
     test('should get submissions from a particular user', async () => {
+        const token = await request(app)
+            .post('/auth/login')
+            .send({
+                username: 'u1',
+                password: 'pwd1'
+            })
+
         const resp = await request(app)
             .get('/user/submission/u1')
+            .send({_token:token.body.token})
 
         expect(resp.body).toEqual(expect.objectContaining({
             washrooms: [
                 {
                     id: expect.any(Number),
-                    x_coordinate: '45.01',
-                    y_coordinate: '55.12',
+                    longitude: '45.01',
+                    latitude: '55.12',
                     opens_at: '1200',
                     closes_at: '1500',
                     washroom_type: 'porta-potty'
                 },
                 {
                     id: expect.any(Number),
-                    x_coordinate: '45.06',
-                    y_coordinate: '-45.15',
+                    longitude: '45.06',
+                    latitude: '-45.15',
                     opens_at: '',
                     closes_at: '',
                     washroom_type: 'porta-potty'

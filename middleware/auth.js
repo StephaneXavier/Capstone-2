@@ -6,7 +6,7 @@ function authenticateJWT(req, res, next) {
     
     try {
         
-        const tokenFromBody = req.body._token;
+        const tokenFromBody = req.body._token || req.headers.authorization;
         const payload = jwt.verify(tokenFromBody, SECRET_KEY);
         req.user = payload;
         

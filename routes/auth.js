@@ -40,6 +40,7 @@ router.post('/login', async (req, res, next) => {
 router.post('/register', async (req, res, next) => {
     
     try {
+        console.log('in /register')
         const newUser = await User.register(req.body);
         User.updateLoginTimestamp(newUser.username);
         let token = jwt.sign({ username: newUser.username }, SECRET_KEY);

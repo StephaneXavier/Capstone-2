@@ -1,4 +1,4 @@
-\c gotta_go_test
+\c gotta_go
 
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS submitted_washrooms CASCADE;
@@ -16,8 +16,8 @@ CREATE TABLE submitted_washrooms (
     id SERIAL PRIMARY KEY,
     washroom_type text NOT NULL,
     user_id text NOT NULL REFERENCES users,
-    x_coordinate decimal NOT NULL,
-    y_coordinate decimal NOT NULL,
+    longitude decimal NOT NULL,
+    latitude decimal NOT NULL,
     opens_at text,
     closes_at text
 );
@@ -35,10 +35,10 @@ VALUES ('kanzo', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q',
         ('steph', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', '2011-02-02'),
         ('tezy', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', '2011-03-03');
 
-INSERT INTO submitted_washrooms (washroom_type, user_id, x_coordinate,y_coordinate, opens_at, closes_at)
-VALUES ('porta-potty', 'kanzo',45.01, 55.12, '1200','1500'),
-        ('gas-station', 'tezy',46.03,-54.14, '0600','2100'),
-        ('porta-potty', 'steph',45.06, -45.15, '','');
+INSERT INTO submitted_washrooms (washroom_type, user_id, longitude,latitude, opens_at, closes_at)
+VALUES ('porta-potty', 'kanzo',-75.699463, 45.433635, '1200','1500'),
+        ('gas-station', 'tezy',-75.637325,45.423936, '0600','2100'),
+        ('porta-potty', 'steph',-75.639373, 45.443753, '','');
 
 INSERT INTO votes (user_id,post_id,upvote)
 VALUES ('kanzo',1,1),

@@ -27,8 +27,8 @@ describe('GET /washroom', () => {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
                     user_id: 'u1',
-                    x_coordinate: '45.01',
-                    y_coordinate: '55.12',
+                    longitude: '45.01',
+                    latitude: '55.12',
                     opens_at: '1200',
                     closes_at: '1500'
                 },
@@ -36,8 +36,8 @@ describe('GET /washroom', () => {
                     id: expect.any(Number),
                     washroom_type: 'gas-station',
                     user_id: 'u2',
-                    x_coordinate: '46.03',
-                    y_coordinate: '-54.14',
+                    longitude: '46.03',
+                    latitude: '-54.14',
                     opens_at: '0600',
                     closes_at: '2100'
                 },
@@ -45,8 +45,8 @@ describe('GET /washroom', () => {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
                     user_id: 'u1',
-                    x_coordinate: '45.06',
-                    y_coordinate: '-45.15',
+                    longitude: '45.06',
+                    latitude: '-45.15',
                     opens_at: '',
                     closes_at: ''
                 }
@@ -70,22 +70,25 @@ describe('POST /washroom', () => {
         expect(resp.body.status).toBe(401)
     })
     test('posts new washroom when logged in', async () => {
+
         const tokenResp = await request(app)
             .post('/auth/login')
             .send({
                 username: 'u1',
                 password: 'pwd1'
             });
-
+        
         const resp = await request(app)
             .post('/washroom')
             .send({
-                washroomType: 'test-washroom',
-                xCoordinate: '55',
-                yCoordinate: '66',
-                opensAt: '1500',
-                closesAt: '2000',
-                _token: tokenResp.body.token
+                _token: tokenResp.body.token,
+                washroomInfo: {
+                    washroomType: 'test-washroom',
+                    xCoordinate: '55',
+                    yCoordinate: '66',
+                    opensAt: '1500',
+                    closesAt: '2000',
+                }
             })
 
         expect(resp.body).toEqual(expect.objectContaining({
@@ -98,8 +101,8 @@ describe('POST /washroom', () => {
         expect(newWashroom).toEqual(expect.objectContaining({
             user_id: 'u1',
             washroom_type: 'test-washroom',
-            x_coordinate: '55',
-            y_coordinate: '66',
+            longitude: '55',
+            latitude: '66',
             opens_at: '1500',
             closes_at: '2000',
             total_votes: '1'
@@ -116,8 +119,8 @@ describe(`GET /washroom/search/:washroomId`, () => {
             washroom: {
                 user_id: 'u1',
                 washroom_type: 'porta-potty',
-                x_coordinate: '45.01',
-                y_coordinate: '55.12',
+                longitude: '45.01',
+                latitude: '55.12',
                 opens_at: '1200',
                 closes_at: '1500',
                 total_votes: '2'
@@ -167,16 +170,16 @@ describe('GET /washroom/search', () => {
                 {
                     id: expect.any(Number),
                     washroom_type: 'gas-station',
-                    x_coordinate: '46.03',
-                    y_coordinate: '-54.14',
+                    longitude: '46.03',
+                    latitude: '-54.14',
                     opens_at: '0600',
                     closes_at: '2100'
                 },
                 {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
-                    x_coordinate: '45.06',
-                    y_coordinate: '-45.15',
+                    longitude: '45.06',
+                    latitude: '-45.15',
                     opens_at: '',
                     closes_at: ''
                 }
@@ -188,16 +191,16 @@ describe('GET /washroom/search', () => {
                 {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
-                    x_coordinate: '45.01',
-                    y_coordinate: '55.12',
+                    longitude: '45.01',
+                    latitude: '55.12',
                     opens_at: '1200',
                     closes_at: '1500'
                 },
                 {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
-                    x_coordinate: '45.06',
-                    y_coordinate: '-45.15',
+                    longitude: '45.06',
+                    latitude: '-45.15',
                     opens_at: '',
                     closes_at: ''
                 }
@@ -209,8 +212,8 @@ describe('GET /washroom/search', () => {
                 {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
-                    x_coordinate: '45.01',
-                    y_coordinate: '55.12',
+                    longitude: '45.01',
+                    latitude: '55.12',
                     opens_at: '1200',
                     closes_at: '1500'
                 }
@@ -230,16 +233,16 @@ describe('GET /washroom/search', () => {
                 {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
-                    x_coordinate: '45.01',
-                    y_coordinate: '55.12',
+                    longitude: '45.01',
+                    latitude: '55.12',
                     opens_at: '1200',
                     closes_at: '1500'
                 },
                 {
                     id: expect.any(Number),
                     washroom_type: 'porta-potty',
-                    x_coordinate: '45.06',
-                    y_coordinate: '-45.15',
+                    longitude: '45.06',
+                    latitude: '-45.15',
                     opens_at: '',
                     closes_at: ''
                 }
@@ -342,8 +345,8 @@ describe('PATCH /washroom/:washroomId', () => {
             washroom: {
                 user_id: 'u1',
                 washroom_type: 'test-washroom',
-                x_coordinate: '45.01',
-                y_coordinate: '55.12',
+                longitude: '45.01',
+                latitude: '55.12',
                 opens_at: '0000',
                 closes_at: '0000',
                 total_votes: '2'

@@ -5,7 +5,7 @@ const { ensureLoggedIn, ensureCorrectUser } = require('../middleware/auth')
 const Washroom = require('../models/washroom');
 const { SECRET_KEY } = require('../config');
 const User = require('../models/user');
-
+const geolib = require('geolib');
 
 // route to get all washroom in db
 router.get('/', async (req, res, next) => {
@@ -21,10 +21,10 @@ router.get('/', async (req, res, next) => {
 // post new washroom. washroomInfo must contain {xCoordinate, yCoordinate, washroomType}, option to add opensAt and closesAt
 router.post('/', ensureLoggedIn, async (req, res, next) => {
     try {
-        
-        const washroomInfo = req.body
-        const username = req.user.username
 
+        const washroomInfo = req.body.washroomInfo
+        const username = req.user.username
+        
         const result = await Washroom.submitNewWahsroom({ username, washroomInfo })
         return res.json({ message: 'washroom succesfully added', washroomId: result })
 
@@ -37,7 +37,7 @@ router.post('/', ensureLoggedIn, async (req, res, next) => {
 /* route to get filtered washroom in db. Must contain one of the following params:
 - opensAt, closesAt, minX, maxX, minY, maxY, washroomType.
 If a coordinate is passed, you must pass in all 4 (min & max of X & Y)
-*/ 
+*/
 router.get('/search', async (req, res, next) => {
     try {
 
@@ -58,7 +58,7 @@ router.get('/search', async (req, res, next) => {
 router.get('/search/:washroomId', async (req, res, next) => {
     try {
         const { washroomId } = req.params;
-        
+
         const washroom = await Washroom.getSpecificWashroom(washroomId)
         return res.json({ washroom: washroom })
 
@@ -71,18 +71,18 @@ router.get('/search/:washroomId', async (req, res, next) => {
 // deletes washroom based off id
 router.delete('/:washroomId', ensureLoggedIn, async (req, res, next) => {
     try {
-        
+
         const { washroomId } = req.params
         const washroomPoster = await Washroom.getSpecificWashroom(washroomId)
-        
-      
+
+
         if (washroomPoster.user_id !== req.user.username) throw new ExpressError('Only poster can delete post')
-       
+
 
         await Washroom.deleteWashroom(washroomId);
 
-        return res.json({message:`washroom ID ${washroomId} deleted`})
-        
+        return res.json({ message: `washroom ID ${washroomId} deleted` })
+
     } catch (e) {
         return next(e)
     }
@@ -90,22 +90,44 @@ router.delete('/:washroomId', ensureLoggedIn, async (req, res, next) => {
 
 // route to patch existing washroom
 router.patch('/:washroomId', ensureLoggedIn, async (req, res, next) => {
-    try{
-       
+    try {
+
         const { washroomId } = req.params
         const washroomPoster = await Washroom.getSpecificWashroom(washroomId)
-        
+
         if (washroomPoster.user_id !== req.user.username) throw new ExpressError('Only poster can modify post')
-        
-        const result = await Washroom.modifyWashroom({washroomInfo:req.body, washroomId})
-        
-        return res.json({message:'washroom successfully updated!'})
-    }catch(e){
+
+        const result = await Washroom.modifyWashroom({ washroomInfo: req.body, washroomId })
+
+        return res.json({ message: 'washroom successfully updated!' })
+    } catch (e) {
         return next(e)
     }
-        
 
 
+
+})
+
+router.get('/getClosest', async (req, res, next) => {
+    
+    try {
+        const washrooms = await Washroom.getAll();
+        const { longitude, latitude } = req.query
+        let shortestBathroomId = { distance: Infinity };
+
+        function findClosestDBWashroom(longitude, latitude) {
+            for (let washroom of washrooms) {
+                let currentDistance = geolib.getDistance({ latitude, longitude }, { latitude: washroom.latitude, longitude: washroom.longitude })
+                if (currentDistance < shortestBathroomId.distance) {
+                    shortestBathroomId = { ...washroom, distance: currentDistance }
+                }
+            }
+        }
+        findClosestDBWashroom(longitude, latitude)
+        return res.json({ shortestBathroomId })
+    } catch (e) {
+        next(e)
+    }
 })
 
 module.exports = router

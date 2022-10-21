@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express();
 const ExpressError = require("./helpers/expressErrors");
-const {authenticateJWT} = require('./middleware/auth')
+const {authenticateJWT} = require('./middleware/auth');
+const cors = require("cors");
 
+app.use(cors())
 app.use(express.json());
 app.use(authenticateJWT)
 

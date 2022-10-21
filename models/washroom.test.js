@@ -22,8 +22,8 @@ describe('getAll', () => {
             id: testWashroomIds[0],
             washroom_type: 'porta-potty',
             user_id: 'u1',
-            x_coordinate: "45.01",
-            y_coordinate: "55.12",
+            longitude: "45.01",
+            latitude: "55.12",
             opens_at: '1200',
             closes_at: '1500'
         }
@@ -40,8 +40,8 @@ describe('getSpecificWashroom', () => {
         const washroomInfo = await Washroom.getSpecificWashroom(testWashroomIds[0])
         expect(washroomInfo.washroom_type).toBe('porta-potty')
         expect(washroomInfo.user_id).toBe('u1')
-        expect(washroomInfo.x_coordinate).toBe('45.01')
-        expect(washroomInfo.y_coordinate).toBe('55.12')
+        expect(washroomInfo.longitude).toBe('45.01')
+        expect(washroomInfo.latitude).toBe('55.12')
         expect(washroomInfo.opens_at).toBe('1200')
         expect(washroomInfo.closes_at).toBe('1500')
     })
@@ -64,8 +64,8 @@ describe('submitNewWashroom', () => {
         expect(newWashroomInfo).toEqual({
             user_id: 'u3',
             washroom_type: 'test-type',
-            x_coordinate: '44',
-            y_coordinate: '55',
+            longitude: '44',
+            latitude: '55',
             opens_at: '1200',
             closes_at: '1500',
             total_votes: '1'
@@ -79,8 +79,8 @@ describe('getSpecificWashroom', () => {
         expect(washroom).toEqual({
             user_id: 'u1',
             washroom_type: 'porta-potty',
-            x_coordinate: '45.01',
-            y_coordinate: '55.12',
+            longitude: '45.01',
+            latitude: '55.12',
             opens_at: '1200',
             closes_at: '1500',
             total_votes: '2'

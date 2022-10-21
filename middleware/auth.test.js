@@ -17,6 +17,7 @@ describe('authenticateJWT', () => {
         };
 
         authenticateJWT(req, res, next);
+        
         expect(req.user.username).toBe('George')
         expect(req.user.iat).toEqual(expect.any(Number))
     })

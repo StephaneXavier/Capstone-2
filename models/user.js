@@ -56,12 +56,12 @@ class User {
 
     // get all of users posts. Returns array of post objects
     static async getUserPosts(username){
-        const posts = await db.query(`SELECT id, x_coordinate, y_coordinate, opens_at, closes_at, washroom_type
+        const posts = await db.query(`SELECT id, longitude, latitude, opens_at, closes_at, washroom_type
                                        FROM submitted_washrooms
                                        WHERE submitted_washrooms.user_id = $1`, [username])
-        if(posts.rows.length ===0){
-            throw new ExpressError('no posts for user', 400)
-        }
+        // if(posts.rows.length ===0){
+        //     throw new ExpressError('no posts for user', 400)
+        // }
         return posts.rows
     }
 
