@@ -1,0 +1,4 @@
+- write code to ensure that duplicates are not put into the DB for submitted_washrooms
+- do up different error codes (BadRequest, NotFoundError)
+- do test for the GET /washroom/getClosest and associated model
+- set up jsonSchema
