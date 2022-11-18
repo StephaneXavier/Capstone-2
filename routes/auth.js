@@ -4,18 +4,19 @@ const router = new express.Router();
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../config')
+const { DB_URI } = require('../config')
 
 /** POST /login - login: {username, password} => {token}**/
 router.post('/login', async (req, res, next) => {
-    const {username, password} = req.body
-    
+    const { username, password } = req.body
+
     try {
         if (!username || !password) {
             throw new ExpressError('Please provide username and password', 401)
         };
-        
+
         const user = await User.get(username);
-        
+
         if (await User.authenticate(username, password)) {
             let payload = { username: user.username };
             let token = jwt.sign(payload, SECRET_KEY);
@@ -38,9 +39,8 @@ router.post('/login', async (req, res, next) => {
  * {username, password} => {token}.
  */
 router.post('/register', async (req, res, next) => {
-    
+
     try {
-        console.log('in /register')
         const newUser = await User.register(req.body);
         User.updateLoginTimestamp(newUser.username);
         let token = jwt.sign({ username: newUser.username }, SECRET_KEY);
