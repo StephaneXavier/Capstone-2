@@ -112,9 +112,11 @@ router.patch('/:washroomId', ensureLoggedIn, async (req, res, next) => {
 })
 
 router.get('/getClosest', async (req, res, next) => {
+    console.log('in /getClosest')
     
     try {
         const washrooms = await Washroom.getAll();
+        console.log('washrooms in backend are', washrooms)
         const { longitude, latitude } = req.query
         let shortestBathroomId = { distance: Infinity };
 

@@ -87,11 +87,10 @@ class Washroom {
     /* Using washroomId, return {user_id, washroom_type, longitude, latitude, opens_at, closes_at, votes}*/ 
     static async getSpecificWashroom(washroomId) {
 
-        const result = await db.query(`SELECT submitted_washrooms.user_id, washroom_type, longitude, latitude, opens_at, closes_at, SUM(votes.upvote) AS total_votes
+        const result = await db.query(`SELECT submitted_washrooms.user_id, washroom_type, longitude, latitude, opens_at, closes_at
                                     FROM submitted_washrooms
-                                    JOIN votes ON (post_id = submitted_washrooms.id)
                                     WHERE submitted_washrooms.id = ${washroomId}
-                                    GROUP BY submitted_washrooms.id`)
+                                    `)
 
         if(result.rows.length ===0) throw new ExpressError('No washroom matching id', )
         return result.rows[0]
